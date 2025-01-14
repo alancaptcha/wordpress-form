@@ -1,0 +1,7 @@
+{
+    "name": "alan/alan-forms",
+    "type": "alan-forms",
+    "require": {
+        "composer/installers": "*"
+    }
+}
