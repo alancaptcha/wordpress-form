@@ -101,7 +101,7 @@ class Elementor_Alan_Captcha_Field extends \ElementorPro\Modules\Forms\Fields\Fi
 		if (!$success) {
 			$ajax_handler->add_error(
 				$field['id'],
-				esc_html__("AlanCaptcha couldn't verify this request." . 'elementor-form-alan-captcha-field')
+				esc_html__("AlanCaptcha couldn't verify this request.")
 			);
 		}
 	}

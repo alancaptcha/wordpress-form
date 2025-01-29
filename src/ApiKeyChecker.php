@@ -4,18 +4,18 @@
 class ApiKeyChecker{
     public static function getCredentialValidity($override = false)
     {
-        if ($override || wp_cache_get("alanCredentialValidity") === false) {
-            wp_cache_set("alanCredentialValidity", ["validity" => self::checkCredentials()], "", 60);
+        if ($override || wp_cache_get("alanFormsCredentialValidity") === false) {
+            wp_cache_set("alanFormsCredentialValidity", ["validity" => self::checkCredentials()], "", 60);
         }
-        $cacheGet = wp_cache_get("alanCredentialValidity");
+        $cacheGet = wp_cache_get("alanFormsCredentialValidity");
         return $cacheGet["validity"];
     }
 
     private static function checkCredentials()
     {
-        $requestBody = ["siteKey" => get_option("site_key")];
+        $requestBody = ["siteKey" => get_option("forms_site_key_field")];
 
-        $requestBody["key"] = get_option("api_key");
+        $requestBody["key"] = get_option("forms_api_key_field");
 
         $response = wp_remote_post("https://api.alancaptcha.com/credentials/validate", [
             "headers" => ["Content-Type" => "application/json"],
@@ -24,6 +24,7 @@ class ApiKeyChecker{
 
         $responseBody = wp_remote_retrieve_body($response);
         $apiBody = json_decode($responseBody, true);
+
 
         if (isset($apiBody["success"]) && $apiBody["success"]) {
             return true;

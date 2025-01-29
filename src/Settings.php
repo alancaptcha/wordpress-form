@@ -7,7 +7,7 @@ add_action('admin_init', 'initialize');
 
 function show_register_menu()
 {
-    add_menu_page("Alan Captcha Forms", "Alan Captcha Forms", "manage_options", "alan_forms_register_setting", "register_setting_function");
+    add_menu_page("Alan Captcha Forms", "Alan Captcha Forms", "manage_options", "alan_captcha_forms_plugin", "register_forms_setting_function");
 }
 
 
@@ -17,40 +17,40 @@ function initialize()
         "license_option",
         "License Options",
         "header_option_callback",
-        "register_setting"
+        "alan_captcha_forms_plugin"
     );
 
     add_settings_section(
         "general_option",
         "General Options",
         "header_option_callback",
-        "register_setting"
+        "alan_captcha_forms_plugin"
     );
 
 
-    register_setting('alan_forms_settings', "site_key");
+    register_setting('alan_forms_settings', "forms_site_key_field");
     add_settings_field(
         "forms_site_key_field",
         "Site-Key",
         "renderField",
-        "register_setting",
+        "alan_captcha_forms_plugin",
         "license_option",
         array(
             'type' => 'text',
-            'id' => "site_key"
+            'id' => "forms_site_key_field"
         )
     );
 
-    register_setting('alan_forms_settings', "api_key");
+    register_setting('alan_forms_settings', "forms_api_key_field");
     add_settings_field(
-        "api_key_field",
+        "forms_api_key_field",
         "API-Key",
         "renderField",
-        "register_setting",
+        "alan_captcha_forms_plugin",
         "license_option",
         array(
             'type' => 'text',
-            'id' => "api_key"
+            'id' => "forms_api_key_field"
         )
     );
 
@@ -59,7 +59,7 @@ function initialize()
         "metforms_enabled",
         "Metforms Integration",
         "renderField",
-        "register_setting",
+        "alan_captcha_forms_plugin",
         "general_option",
         array(
             'type' => 'checkbox',
@@ -72,7 +72,7 @@ function initialize()
         "contact_form_7_enabled",
         "Contact-Form-7 Integration",
         "renderField",
-        "register_setting",
+        "alan_captcha_forms_plugin",
         "general_option",
         array(
             'type' => 'checkbox',
@@ -85,7 +85,7 @@ function initialize()
         "elementor_pro_enabled",
         "Elementor Pro Integration",
         "renderField",
-        "register_setting",
+        "alan_captcha_forms_plugin",
         "general_option",
         array(
             'type' => 'checkbox',
@@ -126,12 +126,12 @@ function renderField($args)
     }
 }
 
-function register_setting_function()
+function register_forms_setting_function()
 {
     //check credential validity
     if (!ApiKeyChecker::getCredentialValidity(true)) {
-        if (get_option("api_key") == "" && get_option("site_key") == "") {
-            add_settings_error("API-Key", "credential-error", "No keys configured. Configure them for AlanCaptcha to work.");
+        if (get_option("forms_api_key_field") == "" && get_option("forms_site_key_field") == "") {
+            add_settings_error("API-Key", "credential-error", "No keys configured. Configure them for AlanCaptcha Forms to work.");
         } else {
             add_settings_error("API-Key", "credential-error", "AlanCaptcha credentials are wrong. Make sure they are correct before using AlanCaptcha.");
         }
@@ -159,8 +159,9 @@ function register_setting_function()
         </p>
         <form action="options.php" method="post">
             <?php echo settings_fields("alan_forms_settings"); ?>
-            <?php echo do_settings_sections("register_setting"); ?>
-            <?php submit_button(); ?>
+            <?php echo do_settings_sections("alan_captcha_forms_plugin"); ?>
+            <?php submit_button();
+            ?>
         </form>
     </div>
     <?php

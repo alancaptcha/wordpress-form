@@ -19,7 +19,7 @@ class Renderer
         //TODO implement clientIdentifier
         $clientIdentifier = "";
 
-        $siteKey = get_option("site_key");
+        $siteKey = get_option("forms_site_key_field");
 
         $lang = explode("_", get_locale())[0];
         $dataLang = "data-lang='$lang'";
