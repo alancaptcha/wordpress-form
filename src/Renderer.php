@@ -21,8 +21,21 @@ class Renderer
 
         $siteKey = get_option("forms_site_key_field");
 
-        $lang = explode("_", get_locale())[0];
-        $dataLang = "data-lang='$lang'";
+
+        //###############---Language-Settings---###############
+        $lang = get_option("alan_forms_language");
+        if ($lang == "--") {
+            $dataLang = "";
+        } else if ($lang == "custom") {
+            $dataLang = "data-unverifiedtext='" . get_option("alan_forms_language_attribute_unverified") .
+                "' data-verifiedtext='" . get_option("alan_forms_language_attribute_verified") .
+                "' data-retrytext='" . get_option("alan_forms_language_attribute_retry") .
+                "' data-workingtext='" . get_option("alan_forms_language_attribute_working") .
+                "' data-starttext='" . get_option("alan_forms_language_attribute_start") . "'";
+        } else {
+            $dataLang = "data-lang='$lang'";
+        }
+
 
         $dataEndpoint = "";
         $apiHost = "api.alancaptcha.com";
@@ -32,5 +45,4 @@ class Renderer
 
         return "<div class='alan-captcha' $dataClientIdentifier $dataLang $dataEndpoint data-autotrigger='true' data-autorun='true' data-sitekey='$siteKey'></div>";
     }
-
 }

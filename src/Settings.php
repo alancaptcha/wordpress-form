@@ -4,12 +4,13 @@ require_once(__DIR__ . "/ApiKeyChecker.php");
 
 add_action('admin_menu', 'show_register_menu');
 add_action('admin_init', 'initialize');
+add_action('admin_footer', 'my_plugin_admin_scripts');
+add_action('admin_head', 'my_plugin_admin_styles');
 
 function show_register_menu()
 {
     add_menu_page("Alan Captcha Forms", "Alan Captcha Forms", "manage_options", "alan_captcha_forms_plugin", "register_forms_setting_function");
 }
-
 
 function initialize()
 {
@@ -21,12 +22,18 @@ function initialize()
     );
 
     add_settings_section(
-        "general_option",
-        "General Options",
+        "implementation_option",
+        "Implementation Options",
         "header_option_callback",
         "alan_captcha_forms_plugin"
     );
 
+    add_settings_section(
+        "widget_option",
+        "Widget Options",
+        "header_option_callback",
+        "alan_captcha_forms_plugin"
+    );
 
     register_setting('alan_forms_settings', "forms_site_key_field");
     add_settings_field(
@@ -60,7 +67,7 @@ function initialize()
         "Metforms Integration",
         "renderField",
         "alan_captcha_forms_plugin",
-        "general_option",
+        "implementation_option",
         array(
             'type' => 'checkbox',
             'id' => "metforms_alan_integration"
@@ -73,7 +80,7 @@ function initialize()
         "Contact-Form-7 Integration",
         "renderField",
         "alan_captcha_forms_plugin",
-        "general_option",
+        "implementation_option",
         array(
             'type' => 'checkbox',
             'id' => "contact_form_7_alan_integration"
@@ -86,26 +93,109 @@ function initialize()
         "Elementor Pro Integration",
         "renderField",
         "alan_captcha_forms_plugin",
-        "general_option",
+        "implementation_option",
         array(
             'type' => 'checkbox',
             'id' => "elementor_pro_alan_integration"
         )
     );
-    /*
-            $id = "language";
-            register_setting('alan_settings', $id);
-            add_settings_field(
-                "language_field",
-                "Language",
-                array($this, "renderField"),
-                "register_setting",
-                "license_option",
-                array(
-                    'type' => 'text',
-                    'id' => "api_key"
-                )
-            );*/
+
+    register_setting('alan_forms_settings', "alan_forms_language");
+    add_settings_field(
+        "alan_forms_language",
+        "Language",
+        "renderField",
+        "alan_captcha_forms_plugin",
+        "widget_option",
+        array(
+            'type' => 'select',
+            'id' => "alan_forms_language",
+            'params' => [
+                'English' => 'en',
+                'German' => 'de',
+                'Spanish' => 'es',
+                'French' => 'fr',
+                'Italian' => 'it',
+                'Adapt to site' => '--',
+                'Custom' => 'custom'
+            ]
+        )
+    );
+
+    register_setting('alan_forms_settings', 'alan_forms_language_attribute_unverified');
+    add_settings_field(
+        "alan_forms_language_attribute_unverified",
+        "Unverified",
+        "renderField",
+        "alan_captcha_forms_plugin",
+        "widget_option",
+        array(
+            'type' => 'text',
+            'id' => "alan_forms_language_attribute_unverified",
+            'class' => "alan_forms_language_custom_override",
+            'placeholder' => "There was an error validating"
+        )
+    );
+
+    register_setting('alan_forms_settings', 'alan_forms_language_attribute_verified');
+    add_settings_field(
+        "alan_forms_language_attribute_verified",
+        "Verified",
+        "renderField",
+        "alan_captcha_forms_plugin",
+        "widget_option",
+        array(
+            'type' => 'text',
+            'id' => "alan_forms_language_attribute_verified",
+            'class' => "alan_forms_language_custom_override",
+            'placeholder' => "Verification successful!"
+        )
+    );
+
+    register_setting('alan_forms_settings', 'alan_forms_language_attribute_working');
+    add_settings_field(
+        "alan_forms_language_attribute_working",
+        "Working",
+        "renderField",
+        "alan_captcha_forms_plugin",
+        "widget_option",
+        array(
+            'type' => 'text',
+            'id' => "alan_forms_language_attribute_working",
+            'class' => "alan_forms_language_custom_override",
+            'placeholder' => "Verification in progress"
+        )
+    );
+
+    register_setting('alan_forms_settings', 'alan_forms_language_attribute_start');
+    add_settings_field(
+        "alan_forms_language_attribute_start",
+        "Start",
+        "renderField",
+        "alan_captcha_forms_plugin",
+        "widget_option",
+        array(
+            'type' => 'text',
+            'id' => "alan_forms_language_attribute_start",
+            'class' => "alan_forms_language_custom_override",
+            'placeholder' => "Start verification"
+        )
+    );
+
+    register_setting('alan_forms_settings', 'alan_forms_language_attribute_retry');
+    add_settings_field(
+        "alan_forms_language_attribute_retry",
+        "Retry",
+        "renderField",
+        "alan_captcha_forms_plugin",
+        "widget_option",
+        array(
+            'type' => 'text',
+            'id' => "alan_forms_language_attribute_retry",
+            'class' => "alan_forms_language_custom_override",
+            'placeholder' => "Retry"
+        )
+    );
 }
 
 
@@ -117,13 +207,68 @@ function header_option_callback()
 function renderField($args)
 {
     $value = get_option($args["id"]);
-    if ($args['type'] == "checkbox") {
+    switch ($args["type"]) {
 
-        $value = ($value) ? 'checked' : '';
-        echo "<input type={$args['type']} name={$args["id"]} $value>";
-    } else {
-        echo "<input type={$args['type']} name={$args["id"]} value='{$value}'>";
+        case "checkbox":
+            $value = ($value) ? 'checked' : '';
+            echo "<input type='" . $args['type'] . "' name='" . $args["id"] . "' " . $value . ">";
+            break;
+
+        case "text":
+            echo "<input " .
+                (isset($args['class']) ? "class='" . $args['class'] . "'" : "") .
+                (isset($args['placeholder']) ? "placeholder='" . $args['placeholder'] . "'" : "") .
+                " type={$args['type']} 
+            name={$args["id"]} 
+            value='{$value}'>";
+            break;
+
+        case "select":
+
+            echo "<select name={$args["id"]}>";
+
+            foreach ($args["params"] as $key => $option_value) {
+                $selected = ($option_value == $value) ? "selected" : "";
+                echo "<option value={$option_value} {$selected}>{$key}</option>";
+            }
+
+            echo "</select>";
+            break;
+
     }
+}
+
+function my_plugin_admin_scripts($hook)
+{
+    ?>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const dropdown = document.getElementsByName("alan_forms_language")[0];
+            const extraFields = document.querySelectorAll(".alan_forms_language_custom_override");
+
+            function toggleExtraFields() {
+                const isVisible = dropdown.value === "custom";
+                extraFields.forEach(field => {
+                    field.style.display = isVisible ? "block" : "none";
+                });
+            }
+
+            dropdown.addEventListener("change", toggleExtraFields);
+            toggleExtraFields(); // Run on page load to set initial state
+        });
+    </script>
+    <?php
+}
+
+function my_plugin_admin_styles($hook)
+{
+    ?>
+    <style>
+        .alan_forms_language_custom_override {
+            display: none;
+        }
+    </style>
+    <?php
 }
 
 function register_forms_setting_function()
