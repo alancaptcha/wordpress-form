@@ -16,6 +16,8 @@ class Renderer
     }
     private static function constructWidget()
     {
+        $clientIdentifier = "";
+
         $siteKey = get_option("forms_site_key_field");
 
 

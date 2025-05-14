@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name:  Alan-Captcha Forms
-Plugin URI:   https://alancaptcha.com/
+Plugin URI:   https://alancaptcha.com/en
 Description:  The captcha plugin to further secure Kontaktfrom 7, Elementor Metforms and Elementor Proforms
 Version:      1.0
 Author:       web&co
-Author URI:  https://webundco.com//
+Author URI:  https://webundco.com/
 */
 
 
