@@ -13,7 +13,8 @@ class Contact_Form_Alan_Captcha extends WP_Widget
 
     function alancaptcha_validation_filter($result, $tag)
     {
-        if (!Validator::validate($_POST['alan_solution'])) {
+
+        if (!PuzzleValidator::validate($_POST['alan_solution'])) {
             $result->invalidate($tag, "The solution provided to Alan-Captcha is not correct");
         }
         return $result;

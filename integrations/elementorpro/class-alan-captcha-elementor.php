@@ -97,7 +97,7 @@ class Elementor_Alan_Captcha_Field extends \ElementorPro\Modules\Forms\Fields\Fi
 	public function validation($field, $record, $ajax_handler)
 	{
 
-		$success = Validator::validate($_POST['alan-solution']);
+		$success = PuzzleValidator::validate($_POST['alan-solution']);
 		if (!$success) {
 			$ajax_handler->add_error(
 				$field['id'],
@@ -187,7 +187,6 @@ class Elementor_Alan_Captcha_Field extends \ElementorPro\Modules\Forms\Fields\Fi
 				   elementor.hooks.addFilter(
 					   'elementor_pro/forms/content_template/field/<?php echo $this->get_type(); ?>',
 					   function ( inputField, item, i ) {
-						   // return "<div>AlanCaptcha Field</div>"
 						   return "<div class='alan-captcha' data-showcase='true'></div><script>window.alanInitInstances();<\/script>";
 					   }, 10, 3
 				   );

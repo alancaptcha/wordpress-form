@@ -16,9 +16,6 @@ class Renderer
     }
     private static function constructWidget()
     {
-        //TODO implement clientIdentifier
-        $clientIdentifier = "";
-
         $siteKey = get_option("forms_site_key_field");
 
 
@@ -27,19 +24,17 @@ class Renderer
         if ($lang == "--") {
             $dataLang = "";
         } else if ($lang == "custom") {
-            $dataLang = "data-unverifiedtext='" . get_option("alan_forms_language_attribute_unverified") .
-                "' data-verifiedtext='" . get_option("alan_forms_language_attribute_verified") .
-                "' data-retrytext='" . get_option("alan_forms_language_attribute_retry") .
-                "' data-workingtext='" . get_option("alan_forms_language_attribute_working") .
-                "' data-starttext='" . get_option("alan_forms_language_attribute_start") . "'";
+            $dataLang = "data-unverifiedtext='" . esc_html(get_option("alan_forms_language_attribute_unverified")) .
+                "' data-verifiedtext='" . esc_html(get_option("alan_forms_language_attribute_verified")) .
+                "' data-retrytext='" . esc_html(get_option("alan_forms_language_attribute_retry")) .
+                "' data-workingtext='" . esc_html(get_option("alan_forms_language_attribute_working")) .
+                "' data-starttext='" . esc_html(get_option("alan_forms_language_attribute_start")) . "'";
         } else {
             $dataLang = "data-lang='$lang'";
         }
 
 
         $dataEndpoint = "";
-        $apiHost = "api.alancaptcha.com";
-
 
         $dataClientIdentifier = "data-clientidentifier='" . $clientIdentifier . "_Captcha_Plugin_" . "1.0.0" . "'";
 

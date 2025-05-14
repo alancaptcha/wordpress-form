@@ -206,7 +206,7 @@ function header_option_callback()
 
 function renderField($args)
 {
-    $value = get_option($args["id"]);
+    $value = esc_html(get_option($args["id"]));
     switch ($args["type"]) {
 
         case "checkbox":
@@ -241,7 +241,7 @@ function renderField($args)
 function my_plugin_admin_scripts($hook)
 {
     ?>
-    <script>
+    <script type="text/javascript">
         document.addEventListener("DOMContentLoaded", function () {
             const dropdown = document.getElementsByName("alan_forms_language")[0];
             const extraFields = document.querySelectorAll(".alan_forms_language_custom_override");
@@ -264,7 +264,7 @@ function my_plugin_admin_styles($hook)
 {
     ?>
     <style>
-        .alan_forms_language_custom_override {
+        esc_css.alan_forms_language_custom_override {
             display: none;
         }
     </style>
@@ -275,7 +275,7 @@ function register_forms_setting_function()
 {
     //check credential validity
     if (!ApiKeyChecker::getCredentialValidity(true)) {
-        if (get_option("forms_api_key_field") == "" && get_option("forms_site_key_field") == "") {
+        if (sanitize_text_field(get_option("forms_api_key_field")) === "" && sanitize_text_field(get_option("forms_site_key_field")) === "") {
             add_settings_error("API-Key", "credential-error", "No keys configured. Configure them for AlanCaptcha Forms to work.");
         } else {
             add_settings_error("API-Key", "credential-error", "AlanCaptcha credentials are wrong. Make sure they are correct before using AlanCaptcha.");

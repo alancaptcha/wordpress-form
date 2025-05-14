@@ -4,8 +4,7 @@ class Validator
 {
 	public static function validate($inputValue): bool
 	{
-		//var_dump($inputValue);
-		$apiKey = get_option("forms_api_key_field");
+		$apiKey = sanitize_text_field(get_option("forms_api_key_field"));
 
 		if (empty($inputValue)) {
 			return false;

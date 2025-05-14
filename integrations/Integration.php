@@ -1,9 +1,10 @@
 <?php
 
 require_once(__DIR__ . '/../src/Renderer.php');
-require_once(__DIR__ . '/../src/Validator.php');
+require_once(__DIR__ . '/../src/PuzzleValidator.php');
 function integrateCaptcha()
 {
+    //metforms
     if (get_option("metforms_alan_integration")) {
         add_action('wp_enqueue_scripts', 'elementor_add_widgets_dependencies');
         add_action(
@@ -17,6 +18,7 @@ function integrateCaptcha()
         add_action('rest_request_before_callbacks', 'authenticate_metforms_rest_request', 10, 3);
     }
 
+    //contact form 7
     if (get_option("contact_form_7_alan_integration")) {
         add_action(
             'wpcf7_init',
@@ -27,6 +29,7 @@ function integrateCaptcha()
         );
     }
 
+    //elementor pro
     if (get_option("elementor_pro_alan_integration")) {
         add_action(
             'elementor_pro/forms/fields/register',
@@ -41,7 +44,7 @@ function integrateCaptcha()
 function authenticate_metforms_rest_request($response, $handler, WP_REST_Request $request)
 {
     if (str_starts_with($request->get_route(), "/metform/v1/entries/insert")) {
-        if (!Validator::validate($request->get_param("alan-solution"))) {
+        if (!PuzzleValidator::validate($request->get_param("alan-solution"))) {
             return new WP_Error('authorization', 'Unauthorized access.', array( 'status' => 401 ));
         }
     }
