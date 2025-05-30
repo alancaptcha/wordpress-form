@@ -1,6 +1,7 @@
 {
     "name": "alan/alan-forms",
     "type": "alan-forms",
+    "license": "MIT",
     "require": {
         "composer/installers": "*"
     }
