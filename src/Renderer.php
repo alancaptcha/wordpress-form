@@ -20,11 +20,20 @@ class Renderer
 
         $siteKey = get_option("forms_site_key_field");
 
-
         //###############---Language-Settings---###############
         $lang = get_option("alan_forms_language");
         if ($lang == "--") {
-            $dataLang = "";
+            $pageLang = substr(get_locale(),0,2);
+
+            $languageArray = ['en', 'de','es','fr','it'];
+            
+
+            if (in_array($pageLang, $languageArray)) {
+                $dataLang= "data-lang='$pageLang'";
+            }else {
+                $dataLang= "data-lang='en'";
+            }
+
         } else if ($lang == "custom") {
             $dataLang = "data-unverifiedtext='" . esc_html(get_option("alan_forms_language_attribute_unverified")) .
                 "' data-verifiedtext='" . esc_html(get_option("alan_forms_language_attribute_verified")) .
