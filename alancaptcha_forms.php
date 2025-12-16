@@ -1,11 +1,12 @@
 <?php
 /*
-Plugin Name:  Alan-Captcha Forms
+Plugin Name:  ALAN Captcha Forms
 Plugin URI:   https://alancaptcha.com/en
 Description:  The captcha plugin to further secure Kontaktfrom 7, Elementor Metforms and Elementor Proforms
 Version:      1.0
 Author:       web&co
 Author URI:  https://webundco.com/
+License:    GPLv2 or later
 */
 
 
@@ -21,11 +22,17 @@ if (!function_exists("add_action")) {
     exit;
 }
 
+define('ALAN_FORMS_PATH', plugin_dir_path(__FILE__));
+
+
+require_once plugin_dir_path(__FILE__)."src/Settings.php";
+require_once plugin_dir_path(__FILE__)."integrations/Integrator.php";
+
 
 class AlanCaptchaWPForms
 {
     //the name used by wordpress to identify the admin settings page
-    private $settings_page_name = "alan_captcha_forms_plugin";
+    
 
     private $plugin_name;
 
@@ -38,13 +45,13 @@ class AlanCaptchaWPForms
             array($this, 'settings_link')
         );
 
-        require_once __DIR__ . "/integrations/Integration.php";
-        require_once __DIR__ . "/src/Settings.php";
+        AlanForms\Integration\Integrator::integrateCaptcha();
+        AlanForms\Settings::init();
     }
 
     function settings_link($links)
     {
-        $settings_link = "<a href=\"admin.php?page=alan_captcha_forms_plugin\">Settings</a>";
+        $settings_link = "<a href=\"admin.php?page=alanforms_settings_page\">Settings</a>";
         array_unshift($links, $settings_link);
         return $links;
     }

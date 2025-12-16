@@ -1,9 +1,9 @@
-=== ALAN Captcha ===
-Contributors: (this should be a list of wordpress.org userid's)
+=== ALAN Captcha Forms ===
+Contributors: webandco
 Tags: captcha,security,alan
 Requires at least: 4.7
-Tested up to: 5.4
-Stable tag: 4.3
+Tested up to: 6.8
+Stable tag: 1.0
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -23,11 +23,11 @@ Start protecting logins, forms, and more in minutes. Fully GDPR & WACC compliant
 
 = Do you have a setup guide? =
 
-Yes, you can view a setup guide for the plugin XXX.
+Yes, you can view a setup guide for the plugin at [docs.alancaptcha.com](https://docs.alancaptcha.com/ "Alan-Captcha Documentation").
 
 = Where do I find my Site Key and API Key? =
 
-You can find your Site Key and API Key in the ??? your ALAN Captcha account.
+You can find your Site Key and API Key on the Dashboard after loging in at [my.alancaptcha.com](https://my.alancaptcha.com "Manage Alan-Captcha").
 
 = Will more integrations be added in the future? =
 
@@ -40,11 +40,6 @@ You can report security vulnerabilities through the Patchstack Vulnerability Dis
 = Where can I get more information about ALAN Captcha? =
 
 Visit our website at: [www.alancaptcha.com](https://www.alancaptcha.com "Alan-Captcha Homepage")
-
-== Screenshots ==
-
-1. This screenshot description corresponds to screenshot-1.(png|jpg|jpeg|gif). Screenshots are stored in the /assets directory.
-2. This is the second screenshot
 
 == Changelog ==
 

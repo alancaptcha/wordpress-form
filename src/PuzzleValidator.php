@@ -1,10 +1,10 @@
 <?php
-
-class Validator
+namespace AlanForms;
+class PuzzleValidator
 {
 	public static function validate($inputValue): bool
 	{
-		$apiKey = sanitize_text_field(get_option("forms_api_key_field"));
+		$apiKey = sanitize_text_field(get_option("alanforms_api_key_field"));
 
 		if (empty($inputValue)) {
 			return false;
@@ -30,6 +30,26 @@ class Validator
 			return true;
 		}
 		return false;
+	}
+
+	public static function nonceSuccessfull(): bool
+	{
+		$value = wp_verify_nonce(
+					sanitize_text_field(wp_unslash($_POST['alanforms_solution_nonce'])), 
+					'alanforms_field_verification'
+		);
+		if (
+			isset($_POST['alanforms_solution_nonce']) &&
+			in_array(
+				$value,
+				[1, 2],
+				true
+			)
+		) {
+			return true;
+		}
+		return false;
+
 	}
 
 }

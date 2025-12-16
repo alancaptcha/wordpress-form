@@ -1,5 +1,5 @@
 <?php
-
+namespace AlanForms;
 
 class ApiKeyChecker{
     public static function getCredentialValidity($override = false)
@@ -13,9 +13,9 @@ class ApiKeyChecker{
 
     private static function checkCredentials()
     {
-        $requestBody = ["siteKey" => get_option("forms_site_key_field")];
+        $requestBody = ["siteKey" => get_option("alanforms_site_key_field")];
 
-        $requestBody["key"] = get_option("forms_api_key_field");
+        $requestBody["key"] = get_option("alanforms_api_key_field");
 
         $response = wp_remote_post("https://api.alancaptcha.com/credentials/validate", [
             "headers" => ["Content-Type" => "application/json"],

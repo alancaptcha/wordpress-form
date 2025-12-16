@@ -1,54 +1,65 @@
 <?php
-
+namespace AlanForms;
 class Renderer
 {
-    public static function render(bool $includeScriptTag): string
+    public static function render(bool $includeScriptTag, $name = ""): string
     {
         $string = "<div>";
         //create a div container and asign properties to it, then print it
-        $string .= self::constructWidget();
+        $string .= self::constructWidget($name);
 
         //load Alan Captcha from cdn
         if ($includeScriptTag)
-            $string .= "<script src=\"https://api.alancaptcha.com/widget/1.0.0/widget.bundle.js?ver=1.0.0&r=" . uniqid() . "\" crossorigin=\"anonymous\" ></script>";
+            wp_enqueue_script(
+                "alan_widget_script",
+                "https://api.alancaptcha.com/widget/1.0.0/widget.bundle.js?ver=1.0.0&r=" . uniqid() . "\"",
+                [],
+                "1.0.0",
+                ["in_footer" => true]
+            );
 
         return $string . "</div>";
     }
-    private static function constructWidget()
+    private static function constructWidget($fieldName)
     {
         $clientIdentifier = "";
 
-        $siteKey = get_option("forms_site_key_field");
+        $siteKey = get_option("alanforms_site_key_field");
 
         //###############---Language-Settings---###############
-        $lang = get_option("alan_forms_language");
+        $lang = get_option("alanforms_language");
         if ($lang == "--") {
-            $pageLang = substr(get_locale(),0,2);
-
-            $languageArray = ['en', 'de','es','fr','it'];
-            
+            $pageLang = substr(get_locale(), 0, 2);
+            $languageArray = ['en', 'de', 'es', 'fr', 'it'];
 
             if (in_array($pageLang, $languageArray)) {
-                $dataLang= "data-lang='$pageLang'";
-            }else {
-                $dataLang= "data-lang='en'";
+                $dataLang = "data-lang='".esc_attr($pageLang)."'";
+            } else {
+                $dataLang = "data-lang='en'";
             }
 
         } else if ($lang == "custom") {
-            $dataLang = "data-unverifiedtext='" . esc_html(get_option("alan_forms_language_attribute_unverified")) .
-                "' data-verifiedtext='" . esc_html(get_option("alan_forms_language_attribute_verified")) .
-                "' data-retrytext='" . esc_html(get_option("alan_forms_language_attribute_retry")) .
-                "' data-workingtext='" . esc_html(get_option("alan_forms_language_attribute_working")) .
-                "' data-starttext='" . esc_html(get_option("alan_forms_language_attribute_start")) . "'";
+            $dataLang = sprintf(
+                "data-unverifiedtext='%s' data-verifiedtext='%s' data-retrytext='%s' data-workingtext='%s' data-starttext='%s'",
+                esc_attr(get_option("alanforms_language_attribute_unverified")),
+                esc_attr(get_option("alanforms_language_attribute_verified")),
+                esc_attr(get_option("alanforms_language_attribute_retry")),
+                esc_attr(get_option("alanforms_language_attribute_working")),
+                esc_attr(get_option("alanforms_language_attribute_start"))
+            );
         } else {
-            $dataLang = "data-lang='$lang'";
+            $dataLang = "data-lang='".esc_attr($lang)."'";
         }
-
 
         $dataEndpoint = "";
 
-        $dataClientIdentifier = "data-clientidentifier='" . $clientIdentifier . "_Captcha_Plugin_" . "1.0.0" . "'";
+        $dataClientIdentifier = "data-clientidentifier='" . esc_attr($clientIdentifier) . "_Captcha_Plugin_" . "1.0.0" . "'";
 
-        return "<div class='alan-captcha' $dataClientIdentifier $dataLang $dataEndpoint data-autotrigger='true' data-autorun='true' data-sitekey='$siteKey'></div>";
+        $dataName = ($fieldName == "") ? "" : "data-name='" . esc_attr($fieldName) . "'";
+
+        $nonce = wp_create_nonce("alanforms_field_verification");
+
+        return "<div class='alan-captcha' " . $dataClientIdentifier ." ".$dataLang ." ". $dataName ." ". $dataEndpoint ." data-autotrigger='true' data-autorun='true' data-sitekey='".esc_attr($siteKey)."'></div> " . 
+        wp_nonce_field('alanforms_field_verification', 'alanforms_solution_nonce');
     }
 }

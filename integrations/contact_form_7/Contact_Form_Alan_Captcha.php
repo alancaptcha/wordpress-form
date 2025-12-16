@@ -1,32 +1,43 @@
 <?php
-class Contact_Form_Alan_Captcha extends WP_Widget
+namespace AlanForms\Integration\Contact_Form;
+
+use AlanForms\PuzzleValidator;
+use AlanForms\Renderer;
+use WP_Widget;
+use WPCF7_FormTag;
+class Contact_Form_Alan_Captcha
 {
 
     function __construct()
     {
         wpcf7_add_form_tag(
-            'alancaptcha*',
-            array($this, 'custom_cf7_tag_handler'),
+            ['alancaptcha', 'alancaptcha*'],
+            [$this, 'alanforms_handler'],
+            ['name-attr'=> false,
+            'not_for_mail' => true]
         );
-        add_filter('wpcf7_validate_alancaptcha*', [$this, 'alancaptcha_validation_filter'], 20, 2);
+
+        add_filter('wpcf7_validate_alancaptcha', [$this, 'validate'], 20, 2);
+        add_filter('wpcf7_validate_alancaptcha*', [$this, 'validate'], 20, 2);
     }
 
-    function alancaptcha_validation_filter($result, $tag)
+    function validate($result, $tag)
     {
 
-        if (!PuzzleValidator::validate($_POST['alan_solution'])) {
-            $result->invalidate($tag, "The solution provided to Alan-Captcha is not correct");
+        $solution = isset($_POST['alan-solution'])
+            ? sanitize_text_field(wp_unslash($_POST['alan-solution']))
+            : '';
+
+        if (!PuzzleValidator::validate($solution)) {
+
+            $result->invalidate($tag, "The solution provided to Alan-Captcha is not correct.");
         }
         return $result;
     }
 
-    function custom_cf7_tag_handler($tag)
+    function alanforms_handler($tag)
     {
-        $html = sprintf(
-            Renderer::render(true),
-        );
-        return $html;
+        $tag = new WPCF7_FormTag($tag);
+        return Renderer::render(true, $tag->name);
     }
 }
-
-
