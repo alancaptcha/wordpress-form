@@ -3,7 +3,7 @@
 Plugin Name:  ALAN Captcha Forms
 Plugin URI:   https://alancaptcha.com/en
 Description:  The captcha plugin to further secure Kontaktfrom 7, Elementor Metforms and Elementor Proforms
-Version:      1.0
+Version:      1.0.1
 Author:       web&co
 Author URI:  https://webundco.com/
 License:    GPLv2 or later

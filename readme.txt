@@ -2,7 +2,7 @@
 Contributors: webandco
 Tags: captcha,security,alan
 Requires at least: 4.7
-Tested up to: 6.8
+Tested up to: 6.9
 Stable tag: 1.0
 Requires PHP: 7.0
 License: GPLv2 or later
